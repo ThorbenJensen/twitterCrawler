@@ -1,6 +1,6 @@
 ### load packages and database
 library(twitteR)
-setwd("/home/thor/inf/R")
+
 load("database.dataframe")
 
 ### register with twitter
@@ -14,25 +14,43 @@ options(RCurlOptions = list(cainfo = system.file("CurlSSL",
 search <- function( searchterm, database ) {
   # get search results
   tweets <- list()
-  tweets <- searchTwitter(searchterm, n=1500, lang="de")
+  tweets <- searchTwitter(paste("#",searchterm,sep=""), n=1500, lang="de", retryOnRateLimit=2)
   tweets <- twListToDF(tweets)
   length(tweets$text)
   
-  # filter new tweets
-  tweets <- tweets[tweets$id > max(database$id),]
+  # add new searchterm column 'tag'
+  tweets <- cbind( rep(searchterm,length(tweets$text)), tweets)
+  colnames(tweets)[1] <- "tag"
   
   # write new tweets to database
   database <- rbind(tweets, database)
+  
+  # delete redundant lines
+  database <- unique(database)
+  
   return(database)
 }
 
 ### MAIN PROCEDURE
 
-# define search, do search and save database
-searchterm <- "#obama"
-database <- search(searchterm, database)
+# retrieve search tags from command line arguments
+tags <- commandArgs(TRUE)
+print("Recieved search tags:")
+print(tags)
+
+# for all tags: do search and update database
+for ( tag in tags ) {  
+  print(paste("running search for tag: ",tag,"..."))
+  database <- search(tag, database) 
+}
+
+print("finished search. saving database ...")
+
+#sort database by id and save
+database <- database[order(database$id, decreasing=TRUE), ]
 save(database,file="database.dataframe")
 
+print("saved database.")
 
 ###################
 ### Graveyard

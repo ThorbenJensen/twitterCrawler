@@ -5,13 +5,14 @@
 
 ### DEFINE SEARCH TAGS HERE
 tags="
-FLUT
-KATASTROPHE
-PANIK
-GEFAHR
+obama
+flut
+katastrophe
+panik
+gefahr
 "
 
 ### EXECUTION OF R CRAWLER
 
-R --slave --file=helloWorld.R --args $tags
+R --slave --file=twitter_crawler.R --args $tags
 

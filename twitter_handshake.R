@@ -13,3 +13,6 @@ twitCred <- OAuthFactory$new(consumerKey=consumerKey,consumerSecret=consumerSecr
 twitCred$handshake(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"))
 registerTwitterOAuth(twitCred)
 
+## save credentials
+setwd("/Users/thorbenje/twitterCrawler")
+save(twitCred,file="twitter_credentials")
