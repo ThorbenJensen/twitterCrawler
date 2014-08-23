@@ -4,22 +4,15 @@
 
 library(ggplot2)
 
-# load database from file
-setwd("/Users/thorbenje/twitterCrawler")
-load("database.dataframe")
 
-# add 'frequency' column to database
+
+load("data/database.dataframe") # load database from file
+
+## add 'frequency' column to database
 freq <- vector(length=length(database$id),mode="numeric")
 database <- cbind(database, freq)
 
-# get search tags from database
-# tags <- unique(database$tag)
-# for (tag in tags) {
-#   
-#   print( tag )
-# } 
-
-# calculate frequency
+## calculate frequency
 minutes <- 15
 for (i in 1:length(database$id)) {
   frequence <- database[database$created <= database[i,]$created 
@@ -28,18 +21,18 @@ for (i in 1:length(database$id)) {
   database[i,]$freq <- frequence
 }
 
-# plot monitoring
+## PLOTTING
 
 # bar plot
 ggplot(data=database, aes(x=created)) + 
   geom_bar(aes(fill=..count..), binwidth=60*minutes) + 
   scale_x_datetime("Date") + 
   scale_y_continuous("Frequency")
-ggsave(file='bar-frequency.png', width=7, height=7, dpi=100)
+ggsave(file='plots/bar-frequency.png', width=7, height=7, dpi=100)
 
 # line plot
 ggplot(data=database, aes(x=created)) + 
   geom_line(aes(y=freq, colour=tag)) + 
   scale_x_datetime("Date") + 
   scale_y_continuous("Frequency")
-ggsave(file='line-frequency.png', width=7, height=7, dpi=100)
+ggsave(file='plots/line-frequency.png', width=7, height=7, dpi=100)
