@@ -3,7 +3,6 @@
 ##########################################
 
 
-### EXECUTION OF R CRAWLER
+### EXECUTION OF PLOTTING SCRIPT
 
-R --slave --file=twitter_monitor_visualization.R
-
+echo 'source("src/twitter_monitor_visualization.R", chdir=T)' | R --slave

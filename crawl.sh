@@ -14,5 +14,4 @@ gefahr
 
 ### EXECUTION OF R CRAWLER
 
-R --slave --file=twitter_crawler.R --args $tags
-
+echo 'source("src/twitter_crawler.R", chdir=T)' | R --slave
