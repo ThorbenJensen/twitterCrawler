@@ -2,7 +2,7 @@
 ### GET TWEETS WITH HASH TAGS ###
 #################################
 
-### load packages and database
+### load libraries and database
 library(twitteR)
 load("../data/database.dataframe")
 
@@ -19,18 +19,22 @@ search <- function( searchterm, database ) {
   tweets <- list()
   tweets <- searchTwitter(paste("#",searchterm,sep=""), 
                           n=1500, lang="de", retryOnRateLimit=2)
-  tweets <- twListToDF(tweets)
-  length(tweets$text)
   
-  # add new searchterm column 'tag'
-  tweets <- cbind( rep(searchterm,length(tweets$text)), tweets)
-  colnames(tweets)[1] <- "tag"
+  ## if any tweets found: add to database
+  if (length(tweets) != 0) {
   
-  # write new tweets to database
-  database <- rbind(tweets, database)
-  
-  # delete redundant lines
-  database <- unique(database)
+    # format results
+    tweets <- twListToDF(tweets) 
+    # add new searchterm column 'tag'
+    tweets <- cbind( rep(searchterm,length(tweets$text)), tweets)
+    colnames(tweets)[1] <- "tag"
+    
+    # write new tweets to database
+    database <- rbind(tweets, database)
+    
+    # delete redundant lines
+    database <- unique(database)
+  } 
   
   return(database)
 }
@@ -45,7 +49,7 @@ print(tags)
 # for all tags: do search and update database
 for ( tag in tags ) {  
   print(paste("running search for tag: ",tag,"..."))
-  database <- search(tag, database) 
+  database <- search(tag, database)
 }
 
 print("finished search. saving database ...")

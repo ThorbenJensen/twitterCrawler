@@ -5,13 +5,13 @@
 
 ### DEFINE SEARCH TAGS HERE
 tags="
-obama
-flut
 katastrophe
-panik
-gefahr
+massenpanik
+hochwasser
+wuppertal
+soest
 "
 
 ### EXECUTION OF R CRAWLER
 
-echo 'source("src/twitter_crawler.R", chdir=T)' | R --slave
+echo 'source("src/twitter_crawler.R", chdir=T)' | R --slave --args $tags
